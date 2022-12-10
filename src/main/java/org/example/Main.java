@@ -41,15 +41,15 @@ public class Main {
         coordinates1.add(new Coordinates(2, 0, 0));
         //*/
 
-        /*
+ //       /*
         //Square
-        coordinates1.add(new Coordinates(0, 1, 1));
-        coordinates1.add(new Coordinates(0, 5, 1));
-        coordinates1.add(new Coordinates(0, 5, 5));
-        coordinates1.add(new Coordinates(0, 1, 5));
+        coordinates1.add(new Coordinates(1, 1, 0));
+        coordinates1.add(new Coordinates(5, 1, 0));
+        coordinates1.add(new Coordinates(5, 5, 0));
+        coordinates1.add(new Coordinates(1, 5, 0));
         //*/
 
-        /*
+       /*
         //Rectangle
         coordinates1.add(new Coordinates(1, 0, 1));
         coordinates1.add(new Coordinates(5, 0, 1));
@@ -143,56 +143,61 @@ public class Main {
             //if there is 4 coordinates.
             else if (coordinates.size() == 4) {
 
+                double []  A = {coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(0).getZ()};
+                double []  B = {coordinates.get(1).getX(), coordinates.get(1).getY(), coordinates.get(1).getZ()};
+                double []  C = {coordinates.get(2).getX(), coordinates.get(2).getY(), coordinates.get(2).getZ()};
+                double []  D = {coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(3).getZ()};
+
+                //sides
                 double distanceAB = 0;
                 double distanceBC = 0;
                 double distanceDC = 0;
                 double distanceAD = 0;
-
-                //calc diagonal distance to see if it's a parallelogram : with distance formula d=√((x_2-x_1)²+(y_2-y_1)²)
+                //diagonals
                 double distanceDB = 0;
                 double distanceAC = 0;
 
                 if (!isZ_2D) {
                     System.out.println("Z is 3D");
-                    //calc distance between points : with distance formula d=√((x_2-x_1)²+(y_2-y_1)²)
-                    distanceAB = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(1).getX(), coordinates.get(1).getY()));
-                    distanceBC = Math.round(calcDistance(coordinates.get(1).getX(), coordinates.get(1).getY(), coordinates.get(2).getX(), coordinates.get(2).getY()));
-                    distanceDC = Math.round(calcDistance(coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(2).getX(), coordinates.get(2).getY()));
-                    distanceAD = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(3).getX(), coordinates.get(3).getY()));
-
-                    //calc diagonal distance to see if it's a parallelogram : with distance formula d=√((x_2-x_1)²+(y_2-y_1)²)
-                    distanceDB = Math.round(calcDistance(coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(1).getX(), coordinates.get(1).getY()));
-                    distanceAC = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(2).getX(), coordinates.get(2).getY()));
+                    //sides
+                    distanceAB = Math.round(calcDistance(A[0], A[1], B[0], B[1]));
+                    distanceBC = Math.round(calcDistance(B[0], B[1], C[0], C[1]));
+                    distanceDC = Math.round(calcDistance(D[0], D[1], C[0], C[1]));
+                    distanceAD = Math.round(calcDistance(A[0], A[1], D[0], D[1]));
+                    //diagonals
+                    distanceDB = Math.round(calcDistance(D[0], D[1], B[0], B[1]));
+                    distanceAC = Math.round(calcDistance(A[0], A[1], C[0], C[1]));
 
                 } else if (!isY_2D) {
                     System.out.println("Y is 3D");
-                    distanceAB = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getZ(), coordinates.get(1).getX(), coordinates.get(1).getZ()));
-                    distanceBC = Math.round(calcDistance(coordinates.get(1).getX(), coordinates.get(1).getZ(), coordinates.get(2).getX(), coordinates.get(2).getZ()));
-                    distanceDC = Math.round(calcDistance(coordinates.get(3).getX(), coordinates.get(3).getZ(), coordinates.get(2).getX(), coordinates.get(2).getZ()));
-                    distanceAD = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getZ(), coordinates.get(3).getX(), coordinates.get(3).getZ()));
-
-                    distanceDB = Math.round(calcDistance(coordinates.get(3).getX(), coordinates.get(3).getZ(), coordinates.get(1).getX(), coordinates.get(1).getZ()));
-                    distanceAC = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getZ(), coordinates.get(2).getX(), coordinates.get(2).getZ()));
+                    //sides
+                    distanceAB = Math.round(calcDistance(A[0], A[2], B[0], B[2]));
+                    distanceBC = Math.round(calcDistance(B[0], B[2], C[0], C[2]));
+                    distanceDC = Math.round(calcDistance(D[0], D[2], C[0], C[2]));
+                    distanceAD = Math.round(calcDistance(A[0], A[2], D[0], D[2]));
+                    //diagonals
+                    distanceDB = Math.round(calcDistance(D[0], D[2], B[0], B[2]));
+                    distanceAC = Math.round(calcDistance(A[0], A[2], C[0], C[2]));
 
                 } else {
                     System.out.println("X is 3D");
-                    distanceAB = Math.round(calcDistance(coordinates.get(0).getY(), coordinates.get(0).getZ(), coordinates.get(1).getY(), coordinates.get(1).getZ()));
-                    distanceBC = Math.round(calcDistance(coordinates.get(1).getY(), coordinates.get(1).getZ(), coordinates.get(2).getY(), coordinates.get(2).getZ()));
-                    distanceDC = Math.round(calcDistance(coordinates.get(3).getY(), coordinates.get(3).getZ(), coordinates.get(2).getY(), coordinates.get(2).getZ()));
-                    distanceAD = Math.round(calcDistance(coordinates.get(0).getY(), coordinates.get(0).getZ(), coordinates.get(3).getY(), coordinates.get(3).getZ()));
+                    //sidea
+                    distanceAB = Math.round(calcDistance(A[1], A[2], B[1], B[2]));
+                    distanceBC = Math.round(calcDistance(B[1], B[2], C[1], C[2]));
+                    distanceDC = Math.round(calcDistance(D[1], D[2], C[1], C[2]));
+                    distanceAD = Math.round(calcDistance(A[1], A[2], D[1], D[2]));
+                    //diagonals
+                    distanceDB = Math.round(calcDistance(D[1], D[2], B[1], B[2]));
+                    distanceAC = Math.round(calcDistance(A[1], A[2], C[1], C[2]));
 
-                    distanceDB = Math.round(calcDistance(coordinates.get(3).getY(), coordinates.get(3).getZ(), coordinates.get(1).getY(), coordinates.get(1).getZ()));
-                    distanceAC = Math.round(calcDistance(coordinates.get(0).getY(), coordinates.get(0).getZ(), coordinates.get(2).getY(), coordinates.get(2).getZ()));
                 }
 
-                System.out.println("Diagonal DB: " + distanceDB);
-                System.out.println("Diagonal AC: " + distanceAC);
-
-                System.out.println("Distance");
-                System.out.println("AB " + distanceAB);
-                System.out.println("BC " + distanceBC);
-                System.out.println("DC " + distanceDC);
-                System.out.println("AD " + distanceAD);
+                System.out.println("AB: " + distanceAB);
+                System.out.println("BC: " + distanceBC);
+                System.out.println("DC: " + distanceDC);
+                System.out.println("AD: " + distanceAD);
+                System.out.println("AC: " + distanceAC);
+                System.out.println("DB: " + distanceDB);
 
                 //if the distance between all 4 points are equal, it's a square
                 if (distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) {
@@ -246,6 +251,7 @@ public class Main {
     }
 
     public static double calcDistance(double x1, double y1, double x2, double y2) {
+        //calc distance between points : with distance formula d=√((x_2-x_1)²+(y_2-y_1)²)
         return Math.sqrt(Math.pow(2, x2 - x1) + Math.pow(2, y2 - y1));
     }
 
