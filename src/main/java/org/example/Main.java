@@ -1,25 +1,19 @@
 package org.example;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Main {
 
 
     static Coordinates c = new Coordinates();
     static ArrayList<Coordinates> coordinates1 = new ArrayList<>();
-
-    /*
-    double[] coordinates1 = {1.1};
-
-    double[] coordinates2 = {1.1, 2.2};
-
-    double[] coordinates3 = {1.1, 2.2, 3,3};
-
-    coordinates4Square = {1.1, 1.1, 1.1, 1.1};
-    coordinates4Rectangle = {1.1, 1.1, 2.2, 2.2};
-    coordinates4Parallelogram = {1.1, 2.2, 3,3, 4.4};
-    coordinates4scalene = {1.1, 2.2, 3,3, 4.4};
-     */
+    static double distanceAB = 0;
+    static double distanceBC = 0;
+    static double distanceDC = 0;
+    static double distanceAD = 0;
 
     public static void main(String[] args) {
 
@@ -41,28 +35,31 @@ public class Main {
         coordinates1.add(new Coordinates(2, 0, 0));
         //*/
 
- //       /*
-        //Square
-        coordinates1.add(new Coordinates(1, 1, 0));
-        coordinates1.add(new Coordinates(5, 1, 0));
-        coordinates1.add(new Coordinates(5, 5, 0));
-        coordinates1.add(new Coordinates(1, 5, 0));
-        //*/
-
-       /*
-        //Rectangle
-        coordinates1.add(new Coordinates(1, 0, 1));
-        coordinates1.add(new Coordinates(5, 0, 1));
-        coordinates1.add(new Coordinates(5, 0, 3));
-        coordinates1.add(new Coordinates(1, 0, 3));
-        //*/
-
         /*
-        //Parallelogram
-        coordinates1.add(new Coordinates(1, 1, 0));
+        //Square
+        coordinates1.add(new Coordinates(-1, -1, 0));
+        coordinates1.add(new Coordinates(-1, -5, 0));
+        coordinates1.add(new Coordinates(-5, -5, 0));
+        coordinates1.add(new Coordinates(-5, -1, 0));
+
+        //*/
+
+     /*
+        //Rectangle
         coordinates1.add(new Coordinates(5, 1, 0));
-        coordinates1.add(new Coordinates(6, 3, 0));
-        coordinates1.add(new Coordinates(2, 3, 0));
+        coordinates1.add(new Coordinates(5, 3, 0));
+        coordinates1.add(new Coordinates(1, 3, 0));
+        coordinates1.add(new Coordinates(1, 1, 0));
+
+        //*/
+
+//     /*
+        //Parallelogram
+        coordinates1.add(new Coordinates(0, 0, 0));
+        coordinates1.add(new Coordinates(9, 0, 0));
+        coordinates1.add(new Coordinates(16, 5, 0));
+        coordinates1.add(new Coordinates(7, 5, 0));
+
         //*/
 
         /*
@@ -82,6 +79,7 @@ public class Main {
         coordinates1.add(new Coordinates(0, 4, 0));
         //*/
 
+        Collections.sort(coordinates1, Comparator.comparing(Coordinates::getX));
         System.out.println("Amount of coordinates: " + coordinates1.size());
         getShape(coordinates1);
     }
@@ -102,8 +100,8 @@ public class Main {
         boolean isY_2D = false;
         boolean isZ_2D = false;
 
-        //check if all z values are the same as the average, if it is. nothing happens, if not,
-        // one of the z axis has higher/lower value and therefor is 3D
+        //check if all z,x,y values are the same, if it is, it's 2D. Otherwise:
+        // one of the z-,x-,y- axis has higher/lower value and therefore is 3D.
         for (var item : coordinates) {
             if (item.getZ() != z) {
                 isZ_2D = true;
@@ -143,52 +141,105 @@ public class Main {
             //if there is 4 coordinates.
             else if (coordinates.size() == 4) {
 
-                double []  A = {coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(0).getZ()};
-                double []  B = {coordinates.get(1).getX(), coordinates.get(1).getY(), coordinates.get(1).getZ()};
-                double []  C = {coordinates.get(2).getX(), coordinates.get(2).getY(), coordinates.get(2).getZ()};
-                double []  D = {coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(3).getZ()};
-
-                //sides
-                double distanceAB = 0;
-                double distanceBC = 0;
-                double distanceDC = 0;
-                double distanceAD = 0;
-                //diagonals
-                double distanceDB = 0;
-                double distanceAC = 0;
+                double[] A = {coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(0).getZ()};
+                double[] B = {coordinates.get(1).getX(), coordinates.get(1).getY(), coordinates.get(1).getZ()};
+                double[] C = {coordinates.get(2).getX(), coordinates.get(2).getY(), coordinates.get(2).getZ()};
+                double[] D = {coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(3).getZ()};
 
                 if (!isZ_2D) {
                     System.out.println("Z is 3D");
-                    //sides
+
                     distanceAB = Math.round(calcDistance(A[0], A[1], B[0], B[1]));
                     distanceBC = Math.round(calcDistance(B[0], B[1], C[0], C[1]));
                     distanceDC = Math.round(calcDistance(D[0], D[1], C[0], C[1]));
                     distanceAD = Math.round(calcDistance(A[0], A[1], D[0], D[1]));
-                    //diagonals
-                    distanceDB = Math.round(calcDistance(D[0], D[1], B[0], B[1]));
-                    distanceAC = Math.round(calcDistance(A[0], A[1], C[0], C[1]));
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("2nd perm");
+                        distanceAB = Math.round(calcDistance(B[0], B[1], A[0], A[1]));
+                        distanceBC = Math.round(calcDistance(A[0], A[1], C[0], C[1]));
+                        distanceDC = Math.round(calcDistance(D[0], D[1], C[0], C[1]));
+                        distanceAD = Math.round(calcDistance(B[0], B[1], D[0], D[1]));
+                    }
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("3th perm");
+                        distanceAB = Math.round(calcDistance(A[0], A[1], B[0], B[1]));
+                        distanceBC = Math.round(calcDistance(B[0], B[1], D[0], D[1]));
+                        distanceDC = Math.round(calcDistance(C[0], C[1], D[0], D[1]));
+                        distanceAD = Math.round(calcDistance(A[0], A[1], C[0], C[1]));
+                    }
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("4th perm");
+                        distanceAB = Math.round(calcDistance(B[0], B[1], A[0], A[1]));
+                        distanceBC = Math.round(calcDistance(A[0], A[1], D[0], D[1]));
+                        distanceDC = Math.round(calcDistance(C[0], C[1], D[0], D[1]));
+                        distanceAD = Math.round(calcDistance(B[0], B[1], C[0], C[1]));
+                    }
 
                 } else if (!isY_2D) {
                     System.out.println("Y is 3D");
-                    //sides
                     distanceAB = Math.round(calcDistance(A[0], A[2], B[0], B[2]));
                     distanceBC = Math.round(calcDistance(B[0], B[2], C[0], C[2]));
                     distanceDC = Math.round(calcDistance(D[0], D[2], C[0], C[2]));
                     distanceAD = Math.round(calcDistance(A[0], A[2], D[0], D[2]));
-                    //diagonals
-                    distanceDB = Math.round(calcDistance(D[0], D[2], B[0], B[2]));
-                    distanceAC = Math.round(calcDistance(A[0], A[2], C[0], C[2]));
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("2nd perm");
+                        distanceAB = Math.round(calcDistance(B[0], B[2], A[0], A[2]));
+                        distanceBC = Math.round(calcDistance(A[0], A[2], C[0], C[2]));
+                        distanceDC = Math.round(calcDistance(D[0], D[2], C[0], C[2]));
+                        distanceAD = Math.round(calcDistance(B[0], B[2], D[0], D[2]));
+                    }
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("3th perm");
+                        distanceAB = Math.round(calcDistance(A[0], A[2], B[0], B[2]));
+                        distanceBC = Math.round(calcDistance(B[0], B[2], D[0], D[2]));
+                        distanceDC = Math.round(calcDistance(C[0], C[2], D[0], D[2]));
+                        distanceAD = Math.round(calcDistance(A[0], A[2], C[0], C[2]));
+                    }
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("4th perm");
+                        distanceAB = Math.round(calcDistance(B[0], B[2], A[0], A[2]));
+                        distanceBC = Math.round(calcDistance(A[0], A[2], D[0], D[2]));
+                        distanceDC = Math.round(calcDistance(C[0], C[2], D[0], D[2]));
+                        distanceAD = Math.round(calcDistance(B[0], B[2], C[0], C[2]));
+                    }
 
                 } else {
                     System.out.println("X is 3D");
-                    //sidea
+                    //sides
                     distanceAB = Math.round(calcDistance(A[1], A[2], B[1], B[2]));
                     distanceBC = Math.round(calcDistance(B[1], B[2], C[1], C[2]));
                     distanceDC = Math.round(calcDistance(D[1], D[2], C[1], C[2]));
                     distanceAD = Math.round(calcDistance(A[1], A[2], D[1], D[2]));
-                    //diagonals
-                    distanceDB = Math.round(calcDistance(D[1], D[2], B[1], B[2]));
-                    distanceAC = Math.round(calcDistance(A[1], A[2], C[1], C[2]));
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("2nd perm");
+                        distanceAB = Math.round(calcDistance(B[1], B[2], A[1], A[2]));
+                        distanceBC = Math.round(calcDistance(A[1], A[2], C[1], C[2]));
+                        distanceDC = Math.round(calcDistance(D[1], D[2], C[1], C[2]));
+                        distanceAD = Math.round(calcDistance(B[1], B[2], D[1], D[2]));
+                    }
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("3th perm");
+                        distanceAB = Math.round(calcDistance(A[1], A[2], B[1], B[2]));
+                        distanceBC = Math.round(calcDistance(B[1], B[2], D[1], D[2]));
+                        distanceDC = Math.round(calcDistance(C[1], C[2], D[1], D[2]));
+                        distanceAD = Math.round(calcDistance(A[1], A[2], C[1], C[2]));
+                    }
+
+                    if (!((distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) || distanceAB == distanceDC && distanceAD == distanceBC)) {
+                        System.out.println("4th perm");
+                        distanceAB = Math.round(calcDistance(B[1], B[2], A[1], A[2]));
+                        distanceBC = Math.round(calcDistance(A[1], A[2], D[1], D[2]));
+                        distanceDC = Math.round(calcDistance(C[1], C[2], D[1], D[2]));
+                        distanceAD = Math.round(calcDistance(B[1], B[2], C[1], C[2]));
+                    }
 
                 }
 
@@ -196,8 +247,16 @@ public class Main {
                 System.out.println("BC: " + distanceBC);
                 System.out.println("DC: " + distanceDC);
                 System.out.println("AD: " + distanceAD);
-                System.out.println("AC: " + distanceAC);
-                System.out.println("DB: " + distanceDB);
+
+                double slopeAB = calcSlope(B[0], B[1], A[0], A[1]);
+                double slopeBC = calcSlope(A[0], A[1], C[0], C[1]);
+                double slopeDC = calcSlope(D[0], D[1], C[0], C[1]);
+                double slopeAD = calcSlope(B[0], B[1], D[0], D[1]);
+
+                System.out.println(slopeAB);
+                System.out.println(slopeBC);
+                System.out.println(slopeDC);
+                System.out.println(slopeAD);
 
                 //if the distance between all 4 points are equal, it's a square
                 if (distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) {
@@ -208,12 +267,12 @@ public class Main {
                 //if the two opposite sides are equal it's a rectangle or parallelogram
                 if (distanceAB == distanceDC && distanceAD == distanceBC) {
 
-                    //if the diagonals are equal in measurement then it's a rectangle
-                    if (distanceDB == distanceAC) {
+                    //if the slope is infinite on 2 sides, it's a rectangle
+                    if (Double.isInfinite(slopeAB) || Double.isInfinite(slopeBC) || Double.isInfinite(slopeDC) || Double.isInfinite(slopeAD)) {
                         System.out.println("Rectangle");
                         return "Rectangle";
                     }
-                    //if the diagonals are not equal in measurement then it's a parallelogram
+                    ////if the slope is not infinite on 2 sides, it's a rectangle
                     else {
                         System.out.println("Parallelogram");
                         return "Parallelogram";
@@ -228,15 +287,7 @@ public class Main {
         //will enter this statement when it's 3D and has least 5 points.
         if (coordinates.size() == 5) {
 
-
-            double distanceAB = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(1).getX(), coordinates.get(1).getY()));
-            double distanceBC = Math.round(calcDistance(coordinates.get(1).getX(), coordinates.get(1).getY(), coordinates.get(2).getX(), coordinates.get(2).getY()));
-            double distanceAD = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(3).getX(), coordinates.get(3).getY()));
-            double distanceDC = Math.round(calcDistance(coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(2).getX(), coordinates.get(2).getY()));
-            double distanceDB = Math.round(calcDistance(coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(1).getX(), coordinates.get(1).getY()));
-            double distanceAC = Math.round(calcDistance(coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(2).getX(), coordinates.get(2).getY()));
-
-            if (distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD || (distanceAB == distanceDC && distanceAD == distanceBC && distanceDB == distanceAC)) {
+            if (distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD || (distanceAB == distanceDC && distanceAD == distanceBC)) {
                 System.out.println("Pyramid");
                 return "Pyramid";
             }
@@ -257,18 +308,5 @@ public class Main {
 
     public static double calcSlope(double x1, double y1, double x2, double y2) {
         return (y2 - y1) / (x2 - x1);
-
-                    /*
-            //calc slope between points : AD and BC then DC and AB
-            double slopeAD = Math.round(calcSlope(coordinates.get(0).getX(),coordinates.get(0).getY(), coordinates.get(3).getX(),coordinates.get(3).getY()));
-            double slopeBC = Math.round(calcSlope(coordinates.get(1).getX(),coordinates.get(1).getY(), coordinates.get(2).getX(),coordinates.get(2).getY()));
-            double slopeDC = Math.round(calcSlope(coordinates.get(3).getX(),coordinates.get(3).getY(), coordinates.get(2).getX(),coordinates.get(2).getY()));
-            double slopeAB = Math.round(calcSlope(coordinates.get(0).getX(),coordinates.get(0).getY(), coordinates.get(1).getX(),coordinates.get(1).getY()));
-            System.out.println("Slope");
-            System.out.println("AB " + slopeAD);
-            System.out.println("BC " + slopeBC);
-            System.out.println("DC " + slopeDC);
-            System.out.println("AD " + slopeAB);
-            */
     }
 }
