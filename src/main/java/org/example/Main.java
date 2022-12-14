@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class Main {
 
@@ -53,12 +54,12 @@ public class Main {
 
         //*/
 
-//     /*
+        /*
         //Parallelogram
-        coordinates1.add(new Coordinates(0, 0, 0));
         coordinates1.add(new Coordinates(9, 0, 0));
-        coordinates1.add(new Coordinates(16, 5, 0));
+        coordinates1.add(new Coordinates(0, 0, 0));
         coordinates1.add(new Coordinates(7, 5, 0));
+        coordinates1.add(new Coordinates(16, 5, 0));
 
         //*/
 
@@ -71,16 +72,6 @@ public class Main {
         coordinates1.add(new Coordinates(0, 0, 1));
         //*/
 
-        /*
-        //Cube
-        coordinates1.add(new Coordinates(0, 0, 0));
-        coordinates1.add(new Coordinates(4, 0, 0));
-        coordinates1.add(new Coordinates(4, 4, 0));
-        coordinates1.add(new Coordinates(0, 4, 0));
-        //*/
-
-        Collections.sort(coordinates1, Comparator.comparing(Coordinates::getX));
-        System.out.println("Amount of coordinates: " + coordinates1.size());
         getShape(coordinates1);
     }
 
@@ -113,9 +104,6 @@ public class Main {
                 isY_2D = true;
             }
         }
-        System.out.println(isX_2D);
-        System.out.println(isY_2D);
-        System.out.println(isZ_2D);
 
         //check if it's 2D
         if (!isX_2D || !isY_2D || !isZ_2D) {
@@ -141,6 +129,7 @@ public class Main {
             //if there is 4 coordinates.
             else if (coordinates.size() == 4) {
 
+                Collections.sort(coordinates1, Comparator.comparing(Coordinates::getX));
                 double[] A = {coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(0).getZ()};
                 double[] B = {coordinates.get(1).getX(), coordinates.get(1).getY(), coordinates.get(1).getZ()};
                 double[] C = {coordinates.get(2).getX(), coordinates.get(2).getY(), coordinates.get(2).getZ()};
@@ -240,23 +229,13 @@ public class Main {
                         distanceDC = Math.round(calcDistance(C[1], C[2], D[1], D[2]));
                         distanceAD = Math.round(calcDistance(B[1], B[2], C[1], C[2]));
                     }
-
                 }
-
-                System.out.println("AB: " + distanceAB);
-                System.out.println("BC: " + distanceBC);
-                System.out.println("DC: " + distanceDC);
-                System.out.println("AD: " + distanceAD);
 
                 double slopeAB = calcSlope(B[0], B[1], A[0], A[1]);
                 double slopeBC = calcSlope(A[0], A[1], C[0], C[1]);
                 double slopeDC = calcSlope(D[0], D[1], C[0], C[1]);
                 double slopeAD = calcSlope(B[0], B[1], D[0], D[1]);
 
-                System.out.println(slopeAB);
-                System.out.println(slopeBC);
-                System.out.println(slopeDC);
-                System.out.println(slopeAD);
 
                 //if the distance between all 4 points are equal, it's a square
                 if (distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD) {
@@ -277,6 +256,9 @@ public class Main {
                         System.out.println("Parallelogram");
                         return "Parallelogram";
                     }
+                } else {
+                    System.out.println("2D shape");
+                    return "2D shape";
                 }
             } else {
                 System.out.println("2D shape");
@@ -284,18 +266,32 @@ public class Main {
             }
         }
 
-        //will enter this statement when it's 3D and has least 5 points.
-        if (coordinates.size() == 5) {
+        if (isX_2D || isY_2D || isZ_2D) {
+            //will enter this statement when it's 3D and has least 5 points.
+            if (coordinates.size() == 5) {
 
-            if (distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD || (distanceAB == distanceDC && distanceAD == distanceBC)) {
-                System.out.println("Pyramid");
-                return "Pyramid";
+                double[] A = {coordinates.get(0).getX(), coordinates.get(0).getY(), coordinates.get(0).getZ()};
+                double[] B = {coordinates.get(1).getX(), coordinates.get(1).getY(), coordinates.get(1).getZ()};
+                double[] C = {coordinates.get(2).getX(), coordinates.get(2).getY(), coordinates.get(2).getZ()};
+                double[] D = {coordinates.get(3).getX(), coordinates.get(3).getY(), coordinates.get(3).getZ()};
+
+                distanceAB = Math.round(calcDistance(A[0], A[1], B[0], B[1]));
+                distanceBC = Math.round(calcDistance(B[0], B[1], C[0], C[1]));
+                distanceDC = Math.round(calcDistance(D[0], D[1], C[0], C[1]));
+                distanceAD = Math.round(calcDistance(A[0], A[1], D[0], D[1]));
+
+                if (distanceAB == distanceBC && distanceBC == distanceDC && distanceDC == distanceAD || (distanceAB == distanceDC && distanceAD == distanceBC)) {
+                    System.out.println("Pyramid");
+                    return "Pyramid";
+                } else {
+                    System.out.println("3D shape");
+                    return "3D shape";
+                }
+
+            } else {
+                System.out.println("3D shape");
+                return "3D shape";
             }
-        }
-
-        if (coordinates.size() == 8) {
-            System.out.println("Cube");
-            return "Cube";
         }
 
         return null;
