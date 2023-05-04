@@ -17,7 +17,7 @@ public class Main {
     static double distanceAD = 0;
 
     public static void main(String[] args) {
-
+        //test1
         /*
         //Dot
         coordinates1.add(new Coordinates(0, 0, 0));
